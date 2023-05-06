@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Match 3</title>
+  <style>
+	.center {
+	  display: block;
+	  margin-left: auto;
+	  margin-right: auto;
+	  width: 49%;
+	  background-image: url("background.jpg");
+	}
+	.hidden {
+	  display: none;
+	}
+    .scores {
+      text-align: center;
+      font-size: 40px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scores">Очки: <span id="scores">0</span></div>
+  <canvas id="canvas" width="750" height="670" class="center"></canvas>
+  <script src="game.js"></script>
+  <p>Управление: чтобы поменять местами тайлы, кликните сначала на первом (он будет выделен), затем на втором (должны быть соседними).</p>
+  <p>Задание: реализовать функцию addScores. См. окончание файла game.js.</p>
+  
+  <img id="tile0" 	src="white.png"  alt="white" 	class="hidden">
+  <img id="tile1"	src="red.png" 	 alt="red" 		class="hidden">
+  <img id="tile2"	src="green.png"  alt="green" 	class="hidden">
+  <img id="tile3"	src="blue.png" 	 alt="blue" 	class="hidden">
+  <img id="tile4" 	src="yellow.png" alt="yellow" 	class="hidden">
+  <img id="tile5" 	src="purple.png" alt="purple" 	class="hidden">
+
+</body>
+
+</html>
