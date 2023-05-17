@@ -1,0 +1,20 @@
+name: "Trivy"
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@add-support-for-trivy-config
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          trivy-config: ./trivy.yaml
