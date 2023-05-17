@@ -17,7 +17,12 @@ var SolderView = cc.Node.extend({
         this.addChild(this.hpBarBackground);
         //Добавляем дочерный элемент - полоску здоровья
         this.hpBar = new ccui.LoadingBar("res_source/progress_bar/progressbarnew.png");
+        //this.hpBar.setScale9Enabled(true);
+        //this.hpBar.setContentSize(180, 88);
+        //this.hpBar.setAnchorPoint(50,50);
+        //this.hpBar.setCapInsets(cc.rect(39, 43, 2, 2));
         this.hpBar.setPosition(this.width, 150);
+        
         this.addChild(this.hpBar);
         //Добавляем дочерный элемент - счетчик здоровья
         this.hpBarLabel = new ccui.Text();

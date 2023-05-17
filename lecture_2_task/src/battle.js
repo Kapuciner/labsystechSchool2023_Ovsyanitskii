@@ -18,11 +18,15 @@ Battle.prototype.start = function () {
 };
 
 Battle.prototype.run = function () {
-    if (!this.solder.isAlive() || !this.enemy.isAlive()) {
+    if (!this.solder.isAlive() ) {
+        //this.enemy.playFinalAnimation();
+        this.stop();
+        return;
+    } else if (!this.enemy.isAlive()){
+        //this.solder.playFinalAnimation();
         this.stop();
         return;
     }
-
     if (!this.nextEnemyAttack) {
         this.nextEnemyAttack = Date.now() +
             Math.random() * (Battle.ENEMY_INTERVAL[1] - Battle.ENEMY_INTERVAL[0]) + Battle.ENEMY_INTERVAL[0];

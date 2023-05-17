@@ -7,9 +7,6 @@ var BattleScene = cc.Scene.extend({
         this._super();
 
         this.battle = new Battle();
-        //Вызываем стартовую анимацию
-        this.playStartAnimation();
-
         this.addBackground();
 
         this.solderView = new SolderView(this.battle.solder);
@@ -26,24 +23,32 @@ var BattleScene = cc.Scene.extend({
 
         this.addAttackButton();
 
+        //Вызываем стартовую анимацию
+        this.playStartAnimation();
         cc.audioEngine.playMusic(resources.battle_music, true);
         cc.audioEngine.setMusicVolume(0.5);
     },
 
     playStartAnimation: function () {
-        this.animationStart = sp.SkeletonAnimation.create(resources['battle_start_json'], resources.battle_atlas);
-        this.animationStart.setAnimation(0, "animation", false);
-        this.animationStart.setPosition(this.width / 2, this.height / 2);
-        this.addChild(this.animationStart);
+        var animationStart = sp.SkeletonAnimation.create(resources['battle_start_json'], resources.battle_atlas);
+        animationStart.setAnimation(0, "animation", false);
+        animationStart.setPosition(this.width / 2, this.height / 2);
+        animationStart.setCompleteListener(function() {
+           animationStart.removeFromParent();
+        });
+        this.addChild(animationStart);
+        
     },
 
     playFinalAnimationLoose: function () {
         this.animationStart = sp.SkeletonAnimation.create(resources['battle_final_json'], resources.battle_atlas);
         this.animationStart.setAnimation(0, "animation", false);
         this.animationStart.setPosition(this.width / 2, this.height / 2);
+        this.animationStart.setScaleX(0.6);
+        this.animationStart.setScaleY(0.6);
         this.addChild(this.animationStart);
 
-        this.finalAnimationText = new ccui.Text("NE VICTORY :(", resources.marvin_round.name,85);
+        this.finalAnimationText = new ccui.Text("NE VICTORY :(", resources.marvin_round.name,65);
         this.finalAnimationText.setPosition(this.width / 2, this.height / 2);
         this.addChild(this.finalAnimationText);
     },
@@ -52,10 +57,13 @@ var BattleScene = cc.Scene.extend({
         this.animationStart = sp.SkeletonAnimation.create(resources['battle_final_json'], resources.battle_atlas);
         this.animationStart.setAnimation(0, "animation", false);
         this.animationStart.setPosition(this.width / 2, this.height / 2);
+        this.animationStart.setScaleX(0.6);
+        this.animationStart.setScaleY(0.6);
         this.addChild(this.animationStart);
 
-        this.finalAnimationText = new ccui.Text("VICTORY", resources.marvin_round.name,85);
+        this.finalAnimationText = new ccui.Text("VICTORY", resources.marvin_round.name,65);
         this.finalAnimationText.setPosition(this.width / 2, this.height / 2);
+        
         this.addChild(this.finalAnimationText);
     },
 
