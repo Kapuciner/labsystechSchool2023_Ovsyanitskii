@@ -12,15 +12,20 @@ var SolderView = cc.Node.extend({
         this.animation.setAnimation(0, "idle", true);
         this.addChild(this.animation);
         //Добавляем дочерный элемент - фон полоски здоровья
-        this.hpBarBackground = new ccui.LoadingBar("res_source/progress_bar/progress_backgroundnew.png");
+        this.hpBarBackground = new ccui.LoadingBar("res_source/progress_bar/progress_background.png");
+        this.hpBarBackground.setScale9Enabled(true);
+        this.hpBarBackground.setContentSize(360, 88);
+        this.hpBarBackground.setScaleX(0.5);
+        this.hpBarBackground.setScaleY(0.5);
         this.hpBarBackground.setPosition(this.width, 150);
         this.addChild(this.hpBarBackground);
         //Добавляем дочерный элемент - полоску здоровья
-        this.hpBar = new ccui.LoadingBar("res_source/progress_bar/progressbarnew.png");
-        //this.hpBar.setScale9Enabled(true);
-        //this.hpBar.setContentSize(180, 88);
-        //this.hpBar.setAnchorPoint(50,50);
-        //this.hpBar.setCapInsets(cc.rect(39, 43, 2, 2));
+        this.hpBar = new ccui.LoadingBar("res_source/progress_bar/progressbar.png");
+        this.hpBar.setScale9Enabled(true);
+        this.hpBar.setContentSize(360, 88);
+        this.hpBar.setScaleX(0.5);
+        this.hpBar.setScaleY(0.5);
+        this.hpBar.setCapInsets(cc.rect(39, 43, 2, 2));
         this.hpBar.setPosition(this.width, 150);
         
         this.addChild(this.hpBar);
@@ -83,7 +88,10 @@ var SolderView = cc.Node.extend({
             new cc.FadeTo(0.2, 0)
         ));
         //Обновляем заполнение полоски здоровья
-        this.hpBar.setPercent(this.solder.hp / this.solder.maxhp * 100); //Изменение размеров полоски ХП
+        this.hpPercent = this.solder.hp / this.solder.maxhp * 100;
+        if(this.hpPercent > 20) this.hpBar.setPercent(this.hpPercent);
+        else this.hpBar.setPercent(20);
+
         this.hpBarLabel.setString(this.solder.hp);
 
         var damage = sp.SkeletonAnimation.create(resources.damage_json, resources.battle_atlas);
