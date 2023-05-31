@@ -16,7 +16,6 @@
         "src/battlescene.js",
         "src/battle.js",
         "src/solder.js",
-        "src/solderview.js",
-        "src/booster.js"
+        "src/solderview.js"
     ]
 }

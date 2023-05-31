@@ -9,6 +9,7 @@ var Battle = function () {
     //Установка максимума рандома солдат и врагов. Максимум 6, далее проблемы с размещением на экране. 
     let maxsolders = 6;
     let maxenemies = 6;
+    
     this.fightersCount = [Math.floor(Math.random() * maxsolders)+1, Math.floor(Math.random() * maxenemies)+1];
     for (let i = 0; i < this.fightersCount[0]; i++) {
         this.soldersArr.push(new Solder('solder'));
@@ -16,6 +17,10 @@ var Battle = function () {
     for (let i = 0; i < this.fightersCount[1]; i++) {
         this.enemiesArr.push(new Solder('enemy'));
     }
+
+    this.coins = 100;
+    this.booster = new Booster(this);
+
     //Функции из battlescene, вызывающие победные анимации для каждой из сторон
     this.soldersWin = function () {
     };
@@ -62,6 +67,7 @@ Battle.prototype.run = function () {
         }
     }
 };
+
 //Функция поиска оставшихся в живых солдат
 Battle.prototype.searchAliveSolders = function() {
     let allowedSolders = [];
@@ -69,7 +75,8 @@ Battle.prototype.searchAliveSolders = function() {
         if(this.soldersArr[i].isAlive()) allowedSolders.push(i);
     }
     return allowedSolders;
-}
+};
+
 //Функция поиска оставшихся в живых врагов
 Battle.prototype.searchAliveEmenies = function() {
     let allowedEnemies = [];
@@ -77,7 +84,8 @@ Battle.prototype.searchAliveEmenies = function() {
         if(this.enemiesArr[i].isAlive()) allowedEnemies.push(i);
     }
     return allowedEnemies;
-}
+};
+
 //Единовременная атака всех солдат
 Battle.prototype.soldersAttack = function() {
     let allowedEnemies = this.searchAliveEmenies();
@@ -89,10 +97,16 @@ Battle.prototype.soldersAttack = function() {
         }
     }
 };
+
 //Атака одним из врагов случайного солдата
 Battle.prototype.enemyAttack = function(enemy) {
     let allowedSolders = this.searchAliveSolders();
     if(allowedSolders.length > 0) enemy.attack(this.soldersArr[allowedSolders[Math.floor(Math.random() * allowedSolders.length)]]);
+};
+
+//Обновление текущих монет в битве
+Battle.prototype.updateCoinsState = function(change) {
+    this.coins += change;
 };
 
 Battle.prototype.stop = function () {
@@ -104,3 +118,27 @@ Battle.prototype.stop = function () {
 };
 
 Battle.ENEMY_INTERVAL = [2000, 3000];
+
+
+var Booster = function (battlearg) {
+    this.battle = battlearg;
+    this.soldersArr = battlearg.soldersArr;
+    this.enemiesArr = battlearg.enemiesArr;
+    this.blockBooster = function() {
+    };
+};
+
+Booster.prototype.useBooster = function() {
+    this.battle.updateCoinsState(Booster.COST);
+    var minHPSolderIndex = -1;
+    var minHPSolder = 100000;
+    for(let i = 0; i < this.soldersArr.length; i++){
+        if(this.soldersArr[i].isAlive() && this.soldersArr[i].hp < minHPSolder){
+            minHPSolderIndex = i;
+            minHPSolder = this.soldersArr[i].hp;
+        }
+    }   
+    this.soldersArr[minHPSolderIndex].takeHeal(50);
+    if(this.battle.coins < 50) this.blockBooster();
+};
+Booster.COST = -50;  

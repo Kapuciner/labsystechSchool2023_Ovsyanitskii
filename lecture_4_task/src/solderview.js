@@ -92,7 +92,10 @@ var SolderView = cc.Node.extend({
             new cc.MoveBy(0.7, 0, 90),
             new cc.FadeTo(0.2, 0),
         ));
-
+        setTimeout(function () {
+            damageDeltaAnimation.removeFromParent();
+        }.bind(this), 900);
+        
         //Обновляем заполнение полоски здоровья
         this.hpPercent = this.solder.hp / this.solder.maxhp * 100;
         if(this.hpPercent > 25) this.hpBar.setPercent(this.hpPercent);

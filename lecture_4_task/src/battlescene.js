@@ -9,6 +9,9 @@ var BattleScene = cc.Scene.extend({
         //Добавляем в battle возможность вызова анимации победы
         this.battle.soldersWin = this.solderWinAnimation.bind(this);
         this.battle.enemiesWin = this.emenyWinAnimation.bind(this);
+
+
+        this.battle.booster.blockBooster = this.blockBoosterButton.bind(this);
         this.addBackground();
         //Заполняем массивы солдат и врагов, хранящиеся в battle
         //Их количество определяется рандомом в battle
@@ -26,9 +29,9 @@ var BattleScene = cc.Scene.extend({
         //Добавляем анимацию начала
         this.playStartAnimation();
         //Добавляем счетчик денег
-        this.addMoneyCountLabel();
+        this.addCoinsLabel();
         //Добавляем кнопку использования бустера
-        this.addBoosterButton();
+        this.addBoosterView();
 
         cc.audioEngine.playMusic(resources.battle_music, true);
         cc.audioEngine.setMusicVolume(0.5);
@@ -54,12 +57,12 @@ var BattleScene = cc.Scene.extend({
     },
     //Функция победной анимации врагов
     emenyWinAnimation: function () {
-        this.animationStart = sp.SkeletonAnimation.create(resources['battle_final_json'], resources.battle_atlas);
-        this.animationStart.setAnimation(0, "animation", false);
-        this.animationStart.setPosition(this.width / 2, this.height / 2);
-        this.animationStart.setScaleX(0.6);
-        this.animationStart.setScaleY(0.6);
-        this.addChild(this.animationStart);
+        this.finalAnimationBackground = sp.SkeletonAnimation.create(resources['battle_final_json'], resources.battle_atlas);
+        this.finalAnimationBackground.setAnimation(0, "animation", false);
+        this.finalAnimationBackground.setPosition(this.width / 2, this.height / 2);
+        this.finalAnimationBackground.setScaleX(0.6);
+        this.finalAnimationBackground.setScaleY(0.6);
+        this.addChild(this.finalAnimationBackground);
 
         this.finalAnimationText = new ccui.Text("NE VICTORY :(", resources.marvin_round.name,65);
         this.finalAnimationText.setPosition(this.width / 2, this.height / 2);
@@ -67,12 +70,12 @@ var BattleScene = cc.Scene.extend({
     },
     //Функция победной анимации солдат
     solderWinAnimation: function () {
-        this.animationStart = sp.SkeletonAnimation.create(resources['battle_final_json'], resources.battle_atlas);
-        this.animationStart.setAnimation(0, "animation", false);
-        this.animationStart.setPosition(this.width / 2, this.height / 2);
-        this.animationStart.setScaleX(0.6);
-        this.animationStart.setScaleY(0.6);
-        this.addChild(this.animationStart);
+        this.finalAnimationBackground = sp.SkeletonAnimation.create(resources['battle_final_json'], resources.battle_atlas);
+        this.finalAnimationBackground.setAnimation(0, "animation", false);
+        this.finalAnimationBackground.setPosition(this.width / 2, this.height / 2);
+        this.finalAnimationBackground.setScaleX(0.6);
+        this.finalAnimationBackground.setScaleY(0.6);
+        this.addChild(this.finalAnimationBackground);
 
         this.finalAnimationText = new ccui.Text("VICTORY", resources.marvin_round.name,65);
         this.finalAnimationText.setPosition(this.width / 2, this.height / 2);
@@ -80,14 +83,21 @@ var BattleScene = cc.Scene.extend({
         this.addChild(this.finalAnimationText);
     },
     //Добавления счетчика денег
-    addMoneyCountLabel: function () {
-        this.moneyCount = 100;
-        this.moneyCountView = new ccui.Text();
-        this.moneyCountView.setString(this.moneyCount + " M");
-        this.moneyCountView.setPosition(this.width / 2, this.height / 2 - this.height / 3 - 70);
-        this.moneyCountView.setFontSize(32);
-        this.moneyCountView.setFontName(resources.marvin_round.name);
-        this.addChild(this.moneyCountView); 
+    addCoinsLabel: function () {
+        this.coinsLabel = new ccui.Text();
+        this.coinsLabel.setString(this.battle.coins + " C");
+        this.coinsLabel.setPosition(this.width / 2, this.height / 2 - this.height / 3 - 70);
+        this.coinsLabel.setFontSize(32);
+        this.coinsLabel.setFontName(resources.marvin_round.name);
+        this.addChild(this.coinsLabel);      
+    },
+    //Обновление счетчика денег
+    updateCoinsLabel: function () {
+        this.coinsLabel.setString(this.battle.coins + " C");
+    },
+    //Блокировка кнопки бустера
+    blockBoosterButton: function () {
+        this.boosterView.setEnabled(false);
     },
     //Создание координат расположения для солдат и врагов. До 6 с каждой стороны.
     generateSoldersPositions: function () {
@@ -111,16 +121,16 @@ var BattleScene = cc.Scene.extend({
         return this.soldersPositions, this.enemiesPositions;
     },
     //Добавление кнопки для использование бустера
-    addBoosterButton: function () {
+    addBoosterView: function () {
         var buttonSize = cc.spriteFrameCache.getSpriteFrame('button.png').getOriginalSize();
         this.boosterView = new ccui.Button('#button.png', '#button_on.png', '#button_off.png', ccui.Widget.PLIST_TEXTURE);
         this.boosterView.setScale9Enabled(true);
-        this.boosterView.setContentSize(340, 70);
+        this.boosterView.setContentSize(350, 70);
         this.boosterView.setCapInsets(cc.rect(buttonSize.width / 2 - 1, buttonSize.height / 2 - 1, 2, 2));
         this.boosterView.setPosition(this.width / 2, this.height / 2 - this.height / 3);
         this.addChild(this.boosterView);
 
-        this.boosterView.setTitleText("USE BOOSTER: 50m");
+        this.boosterView.setTitleText("USE BOOSTER: 50 c");
         this.boosterView.setTitleFontSize(32);
         this.boosterView.setTitleFontName(resources.marvin_round.name);
 
@@ -129,13 +139,8 @@ var BattleScene = cc.Scene.extend({
                 console.log("wait start");
                 return;
             }
-            if(this.moneyCount >=50){
-                prokeBooster = new Booster(this.battle.soldersArr);
-                this.moneyCount -= 50;
-                this.moneyCountView.setString(this.moneyCount + " M");
-            }
-            //Если бустер уже невозможно купить, кнопка блокируется
-            if(this.moneyCount < 50) this.boosterView.setEnabled(false);
+            this.battle.booster.useBooster();
+            this.updateCoinsLabel();
         }.bind(this));
     }
 });
