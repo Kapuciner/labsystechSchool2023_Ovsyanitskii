@@ -12,6 +12,7 @@ var BattleScene = cc.Scene.extend({
 
 
         this.battle.booster.blockBooster = this.blockBoosterButton.bind(this);
+        this.battle.booster.unblockBoosterButton = this.unblockBoosterButton.bind(this);
         this.addBackground();
         //Заполняем массивы солдат и врагов, хранящиеся в battle
         //Их количество определяется рандомом в battle
@@ -98,6 +99,10 @@ var BattleScene = cc.Scene.extend({
     //Блокировка кнопки бустера
     blockBoosterButton: function () {
         this.boosterView.setEnabled(false);
+    },
+
+    unblockBoosterButton: function (){
+        this.boosterView.setEnabled(true);
     },
     //Создание координат расположения для солдат и врагов. До 6 с каждой стороны.
     generateSoldersPositions: function () {

@@ -26,6 +26,7 @@ var Battle = function () {
     };
     this.enemiesWin = function () {
     };
+    
     setTimeout(this.start.bind(this), 3000);
 };
 
@@ -66,6 +67,7 @@ Battle.prototype.run = function () {
             this.enemyTimers[i] = null;
         }
     }
+
 };
 
 //Функция поиска оставшихся в живых солдат
@@ -104,10 +106,14 @@ Battle.prototype.enemyAttack = function(enemy) {
     if(allowedSolders.length > 0) enemy.attack(this.soldersArr[allowedSolders[Math.floor(Math.random() * allowedSolders.length)]]);
 };
 
-//Обновление текущих монет в битве
-Battle.prototype.updateCoinsState = function(change) {
-    this.coins += change;
+Battle.prototype.canSpend = function(coinsToSpend){
+    return this.coins >= coinsToSpend;
 };
+
+Battle.prototype.spendCoins = function(coinsToSpend){
+    this.coins -= coinsToSpend;
+    this.booster.checkButtonByCost();
+}
 
 Battle.prototype.stop = function () {
     this.running = false;
@@ -126,19 +132,30 @@ var Booster = function (battlearg) {
     this.enemiesArr = battlearg.enemiesArr;
     this.blockBooster = function() {
     };
+    this.unblockBooster = function() {
+    };
+};
+
+Booster.prototype.checkButtonByCost = function(){
+    if(this.battle.coins >= Booster.COST){
+        this.unblockBooster();
+    } else {
+        this.blockBooster();
+    }
 };
 
 Booster.prototype.useBooster = function() {
-    this.battle.updateCoinsState(Booster.COST);
-    var minHPSolderIndex = -1;
-    var minHPSolder = 100000;
-    for(let i = 0; i < this.soldersArr.length; i++){
-        if(this.soldersArr[i].isAlive() && this.soldersArr[i].hp < minHPSolder){
-            minHPSolderIndex = i;
-            minHPSolder = this.soldersArr[i].hp;
-        }
-    }   
-    this.soldersArr[minHPSolderIndex].takeHeal(50);
-    if(this.battle.coins < 50) this.blockBooster();
+    if(this.battle.canSpend(Booster.COST)){
+        this.battle.spendCoins(Booster.COST);
+        var minHPSolderIndex = -1;
+        var minHPSolder = 100000;
+        for(let i = 0; i < this.soldersArr.length; i++){
+            if(this.soldersArr[i].isAlive() && this.soldersArr[i].hp < minHPSolder){
+                minHPSolderIndex = i;
+                minHPSolder = this.soldersArr[i].hp;
+            }
+        }   
+        this.soldersArr[minHPSolderIndex].takeHeal(50); 
+    }
 };
-Booster.COST = -50;  
+Booster.COST = 50;  
