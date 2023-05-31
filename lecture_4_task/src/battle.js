@@ -145,17 +145,16 @@ Booster.prototype.checkButtonByCost = function(){
 };
 
 Booster.prototype.useBooster = function() {
-    if(this.battle.canSpend(Booster.COST)){
-        this.battle.spendCoins(Booster.COST);
-        var minHPSolderIndex = -1;
-        var minHPSolder = 100000;
-        for(let i = 0; i < this.soldersArr.length; i++){
-            if(this.soldersArr[i].isAlive() && this.soldersArr[i].hp < minHPSolder){
-                minHPSolderIndex = i;
-                minHPSolder = this.soldersArr[i].hp;
-            }
-        }   
-        this.soldersArr[minHPSolderIndex].takeHeal(50); 
-    }
+    if(!this.battle.canSpend(Booster.COST)) return;
+    this.battle.spendCoins(Booster.COST);
+    var minHPSolderIndex = -1;
+    var minHPSolder = 100000;
+    for(let i = 0; i < this.soldersArr.length; i++){
+        if(this.soldersArr[i].isAlive() && this.soldersArr[i].hp < minHPSolder){
+            minHPSolderIndex = i;
+            minHPSolder = this.soldersArr[i].hp;
+        }
+    }   
+    this.soldersArr[minHPSolderIndex].takeHeal(50); 
 };
 Booster.COST = 50;  
