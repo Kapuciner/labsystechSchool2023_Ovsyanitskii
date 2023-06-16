@@ -1,0 +1,23 @@
+{
+    "project_type": "javascript",
+
+    "debugMode" : 1,
+    "showFPS" : true,
+    "frameRate" : 60,
+    "id" : "gameCanvas",
+    "renderMode" : 0,
+    "noCache": true,
+    "engineDir":"cocos2d-html5",
+
+    "modules" : ["cocos2d", "spine", "ccui"],
+
+    "jsList" : [
+        "src/resources.js",
+        "src/levellogic.js",
+        "src/levelscene.js",
+        "src/rus_popular.js",
+        "src/letterbutton.js",
+        "src/letterstranslate.js",
+        "src/wordslotview.js"
+    ]
+}
